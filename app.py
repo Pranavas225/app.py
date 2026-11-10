@@ -561,26 +561,20 @@ class AniflixHandler(BaseHTTPRequestHandler):
         pass
 
 
-def open_website():
-    time.sleep(1)
-    webbrowser.open("http://127.0.0.1:8000")
-
 
 if __name__ == "__main__":
-    print("================================")
-    print("       WELCOME TO ANIFLIX")
-    print("================================")
+    import os
+
+    port = int(os.environ.get("PORT", 10000))
+
+    print("WELCOME TO ANIFLIX")
     print("Anime:", len(make_catalog(ANIME, "Anime")))
     print("Movies:", len(make_catalog(MOVIES, "Movies")))
     print("Series:", len(make_catalog(SERIES, "Series")))
-    print("Website: http://127.0.0.1:8000")
-    print("Keep this window open while using ANIFLIX.")
 
-    threading.Thread(target=open_website, daemon=True).start()
+    server = HTTPServer(("0.0.0.0", port), AniflixHandler)
+    print(f"ANIFLIX running on port {port}", flush=True)
 
-    try:
-        server = HTTPServer(("127.0.0.1", 8000), AniflixHandler)
-        server.serve_forever()
-    except KeyboardInterrupt:
-        print("ANIFLIX stopped.")
+    server.serve_forever()
+
 
